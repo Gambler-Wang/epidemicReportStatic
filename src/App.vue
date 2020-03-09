@@ -171,9 +171,9 @@ body {
     }
   }
   // 时间控件样式修改
-  .dp-header .dp-item.dp-right{
+  // .dp-header .dp-item.dp-right{
     // color: #0067fe;
-  }
+  // }
   //图片预览全局样式修改
   .pswp__scroll-wrap{
     .pswp__top-bar{

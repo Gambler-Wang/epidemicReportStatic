@@ -70,11 +70,23 @@
     <div class="static">
       <h3>人员所在区域</h3>
       <div v-for="(item,index) in areaReportList" :key="index">
-        <label>{{item.area}}</label>
-        <div>
-          <div :style="'width:'+(item.person_num/currentRegist_count)*100+'%'"></div>
+        <div @click="item.isActive = !item.isActive">item.children
+          <label>
+            <i v-show="item.children && item.children.length>0" :class="(item.isActive)?'iconfont icondn':'iconfont iconright'"></i>
+            {{item.area}}
+          </label>
+          <div>
+            <div :style="'width:'+(item.person_num/currentRegist_count)*100+'%'"></div>
+          </div>
+          <span>{{item.person_num}}</span>
         </div>
-        <span>{{item.person_num}}</span>
+         <collapse>
+          <ul v-show="item.isActive">
+            <li v-for="(subItem,subIndex) in item.children" :key="subIndex">
+              {{subItem.area+' '+subItem.person_num+'人'}} 
+            </li>
+          </ul>
+        </collapse>
       </div>
     </div>
     <!-- <div class="card" v-for="(item,index) of cardList" :key="index">
@@ -99,6 +111,7 @@
 </template>
 
 <script>
+import collapse from "../../utils/collapse.js";
   const echarts = require('echarts');
   // 引入提示框和标题组件
   // require('echarts/lib/component/tooltip');
@@ -118,7 +131,8 @@
       VLegend,
       VBar,
       XButton,
-      VScale
+      VScale,
+       collapse
     },
     data() {
       return {
@@ -206,7 +220,7 @@
       this.currentCompanyName=this.company.company_name;
       this.currentCompanyId=this.company.company_id;
       this.currentCity=this.company.city;
-      this.currentRegist_count=this.company.personnel_count || 1;
+      this.currentRegist_count=this.company.personnel_count || 50;
       this.currentSubmit_count=this.company.submit_count;
       
     },
@@ -367,6 +381,12 @@
           if(res.code==200){
             var arr = res.data.areaReport;
             if(arr.length>0){
+              arr.forEach(element => {
+                element.isActive=false;
+                if(element.children && JSON.stringify(element.children).indexOf(element.area)>-1){
+                  element.children=[];
+                }
+              });
               this.areaReportList=arr;
             }
           }else{
@@ -629,32 +649,54 @@
         margin-bottom: 20px;
       }
       &>div{
-        display: flex;
-        align-items: center;
-        font-size: 18px;
-        color: #292929;
-          margin-bottom: 10px;
-        &>label{
-          width: 120px;
-          text-align: right;
-          margin-right: 18px;
-        }
-        & div{
-          flex:1;
-          height:20px;
-          background:rgba(242,242,242,1);
-          border-radius:10px;
-          &>div{
-            width:20%;
+        margin-bottom: 10px;
+        &>div{
+          display: flex;
+          align-items: center;
+          font-size: 18px;
+          color: #292929;
+          &>label{
+            width: 120px;
+            text-align: right;
+            margin-right: 18px;
+            &>i{
+              font-size: 24px;
+            }
+          }
+          & div{
+            flex:1;
             height:20px;
-            background:rgba(0,149,102,1);
+            background:rgba(242,242,242,1);
             border-radius:10px;
+            &>div{
+              width:20%;
+              height:20px;
+              background:rgba(0,149,102,1);
+              border-radius:10px;
+            }
+          }
+          &>span{
+            text-align: left;
+            width: 80px;
+            margin-left: 18px;
           }
         }
-        &>span{
-          text-align: left;
-          width: 80px;
-          margin-left: 18px;
+        &>ul{
+          width: 100%;
+          padding: 0 138px;
+          box-sizing: border-box;
+          display: flex;
+          align-items: center;
+          font-size: 18px;
+          color: #292929;
+          justify-content: space-between;
+          flex-direction: row;
+          flex-wrap: wrap;
+          &>li{
+            font-size: 18px;
+            width: 50%;
+            list-style: none;
+          }
         }
       }
     }

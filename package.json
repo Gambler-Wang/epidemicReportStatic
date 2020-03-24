@@ -2,7 +2,7 @@
   "name": "vue_demo",
   "version": "1.0.0",
   "description": "vue",
-  "author": "Gavin<gavin.tech@qq.com>",
+  "author": "Gambler<MrCheng_98@163.com>",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",

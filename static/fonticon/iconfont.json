@@ -6,6 +6,13 @@
   "description": "疫情统计",
   "glyphs": [
     {
+      "icon_id": "13332698",
+      "name": "删除",
+      "font_class": "shanchu",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
       "icon_id": "9620745",
       "name": "dn",
       "font_class": "dn",

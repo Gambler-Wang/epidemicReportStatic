@@ -7,6 +7,7 @@ import router from './router';
 import { Flexbox, FlexboxItem, AjaxPlugin, ToastPlugin, LoadingPlugin } from 'vux';
 import {API_BASE_URL} from '@/config/app';
 import zrender from 'zrender';
+import './utils/directives'
 import '@/extends';
 
 // import VueVideoPlayer from 'vue-video-player';

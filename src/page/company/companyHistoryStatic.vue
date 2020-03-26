@@ -70,7 +70,7 @@
     <div class="static">
       <h3>人员所在区域</h3>
       <div v-for="(item,index) in areaReportList" :key="index">
-        <div @click="item.isActive = !item.isActive">item.children
+        <div @click="item.isActive = !item.isActive">
           <label>
             <i v-show="item.children && item.children.length>0" :class="(item.isActive)?'iconfont icondn':'iconfont iconright'"></i>
             {{item.area}}

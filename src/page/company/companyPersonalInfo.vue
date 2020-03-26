@@ -41,6 +41,44 @@
 					日志统计
 				</div>
 			</div>
+			<div class="temperature-box">
+				<div>
+					<label>上午体温</label>
+					<div :class="(morning_health_status==1)?'health-btn normal':'health-btn'">正常</div>
+					<div :class="(morning_health_status==0)?'health-btn error':'health-btn'">异常</div>
+					<p>
+						<input v-model="morning_temp" disabled type="number" placeholder="非必填">
+						<span>℃</span>
+					</p>
+				</div>
+				<div>
+					<label>下午体温</label>
+					<div :class="(afternoon_health_status==1)?'health-btn normal':'health-btn'">正常</div>
+					<div :class="(afternoon_health_status==0)?'health-btn error':'health-btn'	">异常</div>
+					<p>
+						<input v-model="afternoon_temp" disabled type="number" placeholder="非必填">
+						<span>℃</span>
+					</p>
+				</div>
+			</div>
+			<div class="trip-box">
+				<h5>
+					<img src="../../assets/img/tubiaohezi-hisxitongtubiao_huaban.png" alt="">
+					<span>今日行程</span>
+					<!-- <i class="iconfont" @click="handleAddTrip">&#xe6c4;</i> -->
+				</h5>
+				<div class="trip-list">
+					<div v-for="(item,index) in trip_list" :key="index">
+						<div class="dot"></div>
+						<p>
+							<span v-maxLength="item.address" title=""></span>
+							<span>{{item.timeRange}}</span>
+						</p>
+						<!-- <i class="iconfont" @click="delTrip(index)">&#xe60e;</i> -->
+					</div>
+					<div v-if="trip_list.length==0" class="no-trip">今日行程待添加</div>
+				</div>
+			</div>
 			<div class="item">
 				<h3>是否有发热等不适症状</h3>
 				<div>
@@ -247,6 +285,30 @@
 						],
 						info:''
 					},
+				],
+				
+				morning_health_status:2,// 0表示不健康 1表示健康 2表示选择
+				afternoon_health_status:2,// 0表示不健康 1表示健康 2表示选择
+				morning_temp:'',
+				afternoon_temp:'',
+				popupData:{
+					address:'',
+					startTime:'',
+					endTime:''
+				},
+				trip_list:[
+					// {
+					// 	address:'当代国际花园',
+					// 	timeRange:'0:00~7:00',
+					// },
+					// {
+					// 	address:'当代国际花园',
+					// 	timeRange:'0:00~7:00',
+					// },
+					// {
+					// 	address:'当代国际花园',
+					// 	timeRange:'0:00~7:00',
+					// },
 				]
       }
     },
@@ -271,6 +333,11 @@
 						this.area=res.data.epidemic_record.area;
 						this.contact_patient=res.data.epidemic_record.contact_patient;
 						this.contact_infected_area=res.data.epidemic_record.contact_infected_area;
+						this.morning_health_status=res.data.epidemic_record.morning_health_status;// 0表示不健康 1表示健康 2表示选择
+						this.afternoon_health_status=res.data.epidemic_record.afternoon_health_status;// 0表示不健康 1表示健康 2表示选择
+						this.morning_temp=res.data.epidemic_record.morning_temp;
+						this.afternoon_temp=res.data.epidemic_record.afternoon_temp;
+						this.trip_list=JSON.parse(res.data.epidemic_record.trip_list);
 						// this.currentName=data.epidemic_record.personnel_name;
           }else{
             this.$vux.toast.text(res.msg, 'bottom')
@@ -416,8 +483,165 @@
 			padding: 0 42px;
 			overflow: hidden;
 			// margin-top: 180px;
+			&>.temperature-box{
+				// display: flex;
+				margin-bottom: 30px;
+				// justify-content: space-between;
+				&>div{
+					font-size: 30px;
+					align-items: center;
+					display: flex;
+					margin-bottom: 16px;
+					&>.health-btn{
+						width:108px;
+						height:68px;
+						line-height: 66px;
+						box-sizing: border-box;
+						background:rgba(242,242,242,1);
+						border-radius:8px;
+						border:1px solid rgba(229,229,229,1);
+						text-align: center;
+						margin-right: 20px;
+						&.normal{
+							color: #fff;
+							background-color: #009566;
+						}
+						&.error{
+							color: #fff;
+							background-color: #E56154;
+						}
+					}
+					&>label{
+						margin-right: 20px;
+					}
+					&>p{
+						width:164px;
+						height:68px;
+						line-height: 66px;
+						border-radius:8px;
+						border:1px solid rgba(229,229,229,1);
+						box-sizing: border-box;
+						background: #F2F2F2;
+						display: flex;
+						align-items: center;
+						padding: 0 20px;
+						& input{
+							width: 100%;
+							height: 68px;
+							line-height: 68px;
+							border: none;
+							background-color: #f2f2f2;
+							font-size: 28px;
+							-webkit-appearance: none;
+							box-sizing: border-box;
+							&:focus{
+								outline: none;
+							}
+						}
+					}
+					&>span{
+						margin-left: 20px;
+					}
+				}
+			}
+			&>.trip-box{
+				margin-bottom: 30px;
+				& h5{
+					padding-left: 58px;
+					position: relative;
+					display: flex;
+					justify-content: space-between;
+					margin-bottom: 10px;
+					&>span{
+						height: 48px;
+						font-size:34px;
+						font-weight:600;
+						color:rgba(41,41,41,1);
+						line-height:48px;
+					}
+					&>i{
+						width: 55px;
+						text-align: center;
+						font-size:34px;
+					}
+					&>img{
+						position: absolute;
+						width: 38px;
+						height: 48px;
+						left: 5px;
+						top: 0;
+					}
+				}
+				&>.trip-list{
+					&>div{
+						display: flex;
+						align-items: center;
+						position: relative;
+						height: 42px;
+						line-height: 42px;
+						margin-bottom: 20px;
+						&:nth-last-of-type(1){
+							&>.dot{
+								&::after{
+									content: '';
+									position:absolute;
+									width: 2px;
+									height: 0;
+									top: 18px;
+									left: 8px;
+									background-color: #979797;
+								}
+							}
+						}
+						&>.dot{
+							width: 18px;
+							height: 18px;
+							background-color: #009566;
+							border-radius: 50%;
+							margin-right: 40px;
+							margin-left: 14px;
+							position: relative;
+							&::after{
+								content: '';
+								position:absolute;
+								width: 2px;
+								height: 50px;
+								top: 18px;
+								left: 8px;
+								background-color: #979797;
+							}
+						}
+						&>p{
+							color: #292929;
+							font-size: 30px;
+							&>span{
+								margin-right: 38px;
+								&:nth-last-of-type(1){
+									margin-right: 10px;
+								}
+							}
+						}
+						&>i{
+							position: absolute;
+							width: 58px;
+							height: 42px;
+							line-height: 42px;
+							text-align: center;
+							right: 0;
+							top: 0;
+							color: #292929;
+							font-size: 30px;
+						}
+					}
+					&>.no-trip{
+						color: #292929;
+						font-size: 30px;
+						padding-left: 60px;
+					}
+				}
+			}
 			&>.item{
-				margin-bottom: 50px;
+				margin-bottom: 30px;
 				position: relative;
 				&::after{
 					content: '';
@@ -425,7 +649,7 @@
 					width: 100%;
 					height: 0px;
 					border:1px dashed #E5E5E5;
-					bottom: -30px;
+					bottom: -20px;
 					left: 0;
 				}
 				&.status{
@@ -450,14 +674,14 @@
 					font-weight:600;
 					color:rgba(41,41,41,1);
 					line-height:48px;
-					margin-bottom: 22px;
+					margin-bottom: 20px;
 				}
 				&>div{
 					&:nth-of-type(1){
 						&>div{
 							display: flex;
 							align-items: center;
-							margin-bottom: 18px;
+							margin-bottom: 6px;
 							&>div{
 								font-size: 30px;
 								color: #292929;
@@ -513,7 +737,7 @@
 			&>.link-box{
 				width: 100%;
 				height: 93px;
-				margin-bottom: 53px;
+				margin-bottom: 30px;
 				display: flex;
 				justify-content: space-between;
 				&>.link-btn{

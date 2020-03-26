@@ -66,7 +66,7 @@
 			</div>
 			<div class="trip-box">
 				<h5>
-					<img src="../../assets/img/tubiaohezi-hisxitongtubiao_huaban.png" alt="">
+					<b></b>
 					<span>今日行程</span>
 					<i class="iconfont" @click="handleAddTrip">&#xe6c4;</i>
 				</h5>
@@ -616,7 +616,8 @@
 			// margin-top: 180px;
 			&>.temperature-box{
 				// display: flex;
-				margin-bottom: 20px;
+				margin-bottom: 30px;
+				position: relative;
 				// justify-content: space-between;
 				&>p{
 					padding-left: 140px;
@@ -680,9 +681,19 @@
 						margin-left: 20px;
 					}
 				}
+				&::after{
+					content: '';
+					position: absolute;
+					width: 100%;
+					height: 0px;
+					border:1px dashed #E5E5E5;
+					bottom: -16px;
+					left: 0;
+				}
 			}
 			&>.trip-box{
 				margin-bottom: 30px;
+				position: relative;
 				& h5{
 					padding-left: 58px;
 					position: relative;
@@ -701,12 +712,14 @@
 						text-align: center;
 						font-size:34px;
 					}
-					&>img{
+					&>b{
 						position: absolute;
 						width: 38px;
 						height: 48px;
 						left: 5px;
 						top: 0;
+						background: url('../../assets/img/tubiaohezi-hisxitongtubiao_huaban.png');
+						background-size: 100% 100%;
 					}
 				}
 				&>.trip-list{
@@ -776,6 +789,15 @@
 						padding-left: 60px;
 					}
 				}
+				&::after{
+					content: '';
+					position: absolute;
+					width: 100%;
+					height: 0px;
+					border:1px dashed #E5E5E5;
+					bottom: -16px;
+					left: 0;
+				}
 			}
 			&>.item{
 				margin-bottom: 30px;
@@ -786,7 +808,7 @@
 					width: 100%;
 					height: 0px;
 					border:1px dashed #E5E5E5;
-					bottom: -20px;
+					bottom: -16px;
 					left: 0;
 				}
 				&.status{
